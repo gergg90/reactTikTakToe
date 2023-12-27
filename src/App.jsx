@@ -4,28 +4,21 @@ import Square from "./components/Square";
 import { TURNS } from "./constans";
 import { checkWinner, checkEndGame } from "./logic/board";
 import WinnerModal from "./components/WinnerModal";
+import { saveGameToStorage, resetGameStorage } from "./logic/storage";
 
 import "./App.css";
-
-
-
-// !IMPORTANTE
-// !TODO SERAPARA EL STORAGE
 
 function App() {
   // states
   const [board, setBoard] = useState(() => {
-
-    const boardStorage = window.localStorage.getItem('board')
-    if(boardStorage) return JSON.parse(boardStorage)
-    return Array(9).fill(null)
-
+    const boardStorage = window.localStorage.getItem("board");
+    if (boardStorage) return JSON.parse(boardStorage);
+    return Array(9).fill(null);
   });
 
   const [turn, setTurn] = useState(() => {
-    const turnStorage = window.localStorage.getItem('turn')
-    return turnStorage ?? TURNS.X
-
+    const turnStorage = window.localStorage.getItem("turn");
+    return turnStorage ?? TURNS.X;
   });
 
   const [winner, setWinner] = useState(null);
@@ -39,10 +32,11 @@ function App() {
     setBoard(newBoard);
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
-    
-    window.localStorage.setItem('board', JSON.stringify(newBoard))
-    window.localStorage.setItem('turn', newTurn)
 
+    saveGameToStorage({
+      board: newBoard,
+      turn: newTurn,
+    });
 
     setTurn(newTurn);
 
@@ -59,9 +53,8 @@ function App() {
     setBoard(Array(9).fill(null));
     setTurn(TURNS.X);
     setWinner(null);
-    
-    window.localStorage.removeItem('board')
-    window.localStorage.removeItem('turn')
+
+    resetGameStorage();
   };
 
   return (

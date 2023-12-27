@@ -1,6 +1,6 @@
 import { WINNER_COMBOS } from "../constans";
 
-const checkWinner = (boardToCheck) => {
+export const checkWinner = (boardToCheck) => {
   for (const combo of WINNER_COMBOS) {
     const [a, b, c] = combo;
 
@@ -16,10 +16,6 @@ const checkWinner = (boardToCheck) => {
   return null;
 };
 
-const checkEndGame = (newBoard) => {
+export const checkEndGame = (newBoard) => {
   return newBoard.every((square) => square !== null)
 };
-
-
-export default checkWinner;
-export default checkEndGame;

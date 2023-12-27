@@ -7,12 +7,27 @@ import WinnerModal from "./components/WinnerModal";
 
 import "./App.css";
 
-// enum x : 0
+
+
+// !IMPORTANTE
+// !TODO SERAPARA EL STORAGE
 
 function App() {
   // states
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [turn, setTurn] = useState(TURNS.X);
+  const [board, setBoard] = useState(() => {
+
+    const boardStorage = window.localStorage.getItem('board')
+    if(boardStorage) return JSON.parse(boardStorage)
+    return Array(9).fill(null)
+
+  });
+
+  const [turn, setTurn] = useState(() => {
+    const turnStorage = window.localStorage.getItem('turn')
+    return turnStorage ?? TURNS.X
+
+  });
+
   const [winner, setWinner] = useState(null);
 
   // actualizacion de tablero
@@ -24,11 +39,14 @@ function App() {
     setBoard(newBoard);
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
+    
+    window.localStorage.setItem('board', JSON.stringify(newBoard))
+    window.localStorage.setItem('turn', newTurn)
+
 
     setTurn(newTurn);
 
     const newWiner = checkWinner(newBoard);
-
     if (newWiner) {
       confetti();
       setWinner(newWiner);
@@ -41,6 +59,9 @@ function App() {
     setBoard(Array(9).fill(null));
     setTurn(TURNS.X);
     setWinner(null);
+    
+    window.localStorage.removeItem('board')
+    window.localStorage.removeItem('turn')
   };
 
   return (
